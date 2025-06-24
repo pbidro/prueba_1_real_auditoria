@@ -10,7 +10,7 @@ $(function(){
       const win=$("<div class='window fixed inset-x-0 top-8 bottom-12 bg-white rounded shadow-lg flex flex-col'></div>");
       win.attr('id',id).css('z-index',z++);
       const header=$("<div class='window-header bg-gray-200 flex items-center px-2 py-1'><div class='flex space-x-1'><span class='circle close'></span><span class='circle min'></span><span class='circle max'></span></div><div class='flex-1 text-center drag-handle font-semibold'>"+title+"</div></div>");
-      const body=$("<div class='flex-1 overflow-auto p-2'></div>").append(content);
+      const body=$("<div class='flex-1 overflow-auto p-0'></div>").append(content);
       win.append(header).append(body);
       header.find('.close').on('click',()=>win.hide());
       header.find('.min').on('click',()=>win.hide());
@@ -37,6 +37,8 @@ $(function(){
       if($.fn.resizable){
         win.resizable({handles:'all',containment:'#desktop'});
       }
+      // start maximized for better visibility
+      header.find('.max').trigger('click');
     }
 
   function setSelected(el){
@@ -104,13 +106,15 @@ $(function(){
       case 'terminal':
         createWindow('terminal','Terminal','<p class="font-mono">$ echo Hola</p>');break;
       case 'map':
-        createWindow('map','Mapa','<iframe class="w-full h-64" src="https://www.openstreetmap.org/export/embed.html"></iframe>');break;
+        mapApp();break;
       case 'safari':
         createWindow('safari','Navegador','<p>Navegador simple.</p>');break;
       case 'settings':
         createWindow('settings','Ajustes','<p>Ajustes del sistema.</p>');break;
       case 'store':
         createWindow('store','Tienda','<p>Aplicaciones disponibles.</p>');break;
+      case 'sales':
+        salesApp();break;
       case 'trash':
         createWindow('trash','Basurero','<p>Vacío</p>');break;
     }
@@ -145,17 +149,19 @@ $(function(){
     // generate data once
     if(window.sample) return window.sample;
     function rand(arr){return arr[Math.floor(Math.random()*arr.length)];}
-    const names=['Ana','Luis','Pedro','Maria','Juan','Carla','Diego','Sofía'];
-    const ap=['Gomez','Perez','Soto','Rojas'];
-    const religions=['Católica','Atea','Judía','Musulmana'];
+    const names=['Ana','Luis','Pedro','Maria','Juan','Carla','Diego','Sofía','Rafael','Laura','Tomás','Camila'];
+    const ap=['Gomez','Perez','Soto','Rojas','Torres','Muñoz'];
+    const religions=['Católica','Atea','Judía','Musulmana','Agnóstica'];
     let personales=[];
     for(let i=0;i<50;i++){
-      personales.push({Nombre:rand(names)+' '+rand(ap),RUT:'1'+i+'-K',Direccion:'Calle '+i,Religion:rand(religions),Sueldo:1000+i,Estado:'Soltero'});
+      let sueldo=1000+i*10;
+      if(i===20) sueldo=99999;
+      personales.push({Nombre:rand(names)+' '+rand(ap),RUT:i+'-K',Direccion:'Calle '+(100+i),Religion:rand(religions),Sueldo:sueldo,Estado:i%2==0?'Soltero':'Casado'});
     }
-    let boletas=[];for(let i=0;i<50;i++)boletas.push({Boleta:i+1,Producto:'Prod'+i,Precio:(i*3)%100});
-    let catalogo=[];for(let i=0;i<50;i++)catalogo.push({Codigo:'P'+i,Especificacion:'Tecnica '+i});
+    let boletas=[];for(let i=0;i<50;i++){boletas.push({Boleta:i+1,Producto:'Prod'+i,Precio:Math.floor(Math.random()*120)});}
+    let catalogo=[];for(let i=0;i<50;i++){catalogo.push({Codigo:'P'+i,Especificacion:'Tecnica '+i,Stock:i===10?0:Math.floor(Math.random()*20)+1});}
     let enemigos=[];for(let i=0;i<50;i++)enemigos.push({ID:i,Descripcion:'Enemy '+i,Nivel:i%10,Ubicacion:'Lugar '+i});
-    let viajes=[];for(let i=0;i<50;i++)viajes.push({RUT:'1'+i+'-K',Origen:'Ciudad'+i,Destino:'Destino'+i,Fecha:'2025-01-'+((i%30)+1),Duracion:i+'h'});
+    let viajes=[];for(let i=0;i<50;i++){let dur=i===10?50:i+1;viajes.push({RUT:i+'-K',Origen:'Ciudad'+i,Destino:'Destino'+i,Fecha:'2025-01-'+((i%30)+1),Duracion:dur+'h'});}    
     window.sample={personales,boletas,catalogo,enemigos,viajes};
     return window.sample;
   }
@@ -209,29 +215,28 @@ $(function(){
   /* Grafo */
   function graphApp(){
     if($('#graph').length){ $('#graph').show(); return; }
-    const cyDiv=$('<div id="cy" style="width:100%;height:400px;"></div>');
-    createWindow('graph','Grafo',cyDiv);
-    const cy=cytoscape({
-      container:cyDiv[0],
-      elements:[
-        {data:{id:'piso1',label:'Piso 1'}},
-        {data:{id:'piso2',label:'Piso 2'}},
-        {data:{id:'piso3',label:'Piso 3'}},
-        {data:{id:'server1',label:'Servidor sin AC'}},
-        {data:{id:'server2',label:'Servidor en baño'}},
-        {data:{id:'it1',label:'Oficina TI'}}
-      ],
-      edges:[
-        {data:{source:'piso1',target:'server1'}},
-        {data:{source:'piso2',target:'server2'}},
-        {data:{source:'piso3',target:'it1'}}
-      ],
-      style:[
-        {selector:'node',style:{label:'data(label)', 'background-color':'#1a56db', color:'#fff', 'text-valign':'center'}},
-        {selector:'edge',style:{'line-color':'#ccc','target-arrow-color':'#ccc','target-arrow-shape':'triangle'}}
-      ],
-      layout:{name:'breadthfirst'}
+    const container=$('<div class="w-full h-full flex flex-col"><div class="p-1 text-right space-x-1"><button id="zin" class="bg-gray-200 px-2">+</button><button id="zout" class="bg-gray-200 px-2">-</button></div><div id="diagram" class="flex-1"></div></div>');
+    createWindow('graph','Grafo',container);
+    const $ = go.GraphObject.make;
+    const diagram=$(go.Diagram, container.find('#diagram')[0], {
+      grid: $(go.Panel,'Grid',
+        $(go.Shape,'LineH',{stroke:'#eee'}),
+        $(go.Shape,'LineV',{stroke:'#eee'})
+      ),
+      'grid.visible':true
     });
+    let nodes=[];let links=[];
+    for(let i=1;i<=5;i++){
+      nodes.push({key:'P'+i,text:'Piso '+i});
+      for(let t of ['Oficina','Baño','Impresora','Servidor','AC']){
+        const k='P'+i+t;
+        nodes.push({key:k,text:t});
+        links.push({from:'P'+i,to:k});
+      }
+    }
+    diagram.model=new go.GraphLinksModel(nodes,links);
+    container.find('#zin').on('click',()=>diagram.commandHandler.increaseZoom());
+    container.find('#zout').on('click',()=>diagram.commandHandler.decreaseZoom());
   }
 
   /* PDF */
@@ -250,6 +255,27 @@ $(function(){
         var renderContext={canvasContext:canvas.getContext('2d'),viewport:viewport};
         page.render(renderContext);
       });
+    });
+  }
+
+  function mapApp(){
+    if($('#map').length){ $('#map').show(); return; }
+    const url='https://www.openstreetmap.org/export/embed.html?bbox=-70.615%2C-33.500%2C-70.606%2C-33.494&layer=mapnik&marker=-33.497%2C-70.610';
+    const frame=$('<iframe class="w-full h-full" src="'+url+'"></iframe>');
+    createWindow('map','Mapa',frame);
+  }
+
+  function salesApp(){
+    if($('#sales').length){ $('#sales').show(); return; }
+    const container=$('<div class="w-full h-full flex flex-col"><canvas id="salesChart" class="flex-1"></canvas><p class="p-2 text-sm">Hay diferencias con lo reportado por las bases de datos.</p></div>');
+    createWindow('sales','Ventas',container);
+    new Chart(container.find('#salesChart'),{
+      type:'bar',
+      data:{
+        labels:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+        datasets:[{label:'Ventas',data:[12,19,3,5,2,3,20,15,13,9,7,10],backgroundColor:'rgba(75,192,192,0.5)'}]
+      },
+      options:{responsive:true,maintainAspectRatio:false}
     });
   }
 });
