@@ -15,9 +15,15 @@ $(function(){
     $('#windows').append(win);
   }
 
+  function setSelected(el){
+    $('.selected').removeClass('selected');
+    el.addClass('selected');
+  }
+
   // icon open handlers
-  $('.icon').on('dblclick',function(){
+  $('.icon, .dock-icon').on('dblclick',function(){
     const app=$(this).data('app');
+    setSelected($(this));
     openApp(app);
   });
 
@@ -32,7 +38,7 @@ $(function(){
       case 'pdf':
         pdfApp();break;
       case 'notes':
-        createWindow('notes','Notas','<textarea class="w-full h-64 border"></textarea>');
+        createWindow('notes','Notas','<textarea class="w-full h-64 border"></textarea><div class="text-right text-xs mt-2">Licencia gratuita terminada</div>');
         break;
       case 'calc':
         createWindow('calc','Calculadora','<input type="text" id="calcDisplay" class="border w-full mb-2" readonly><div id="calcButtons" class="grid grid-cols-4 gap-1"></div>');
@@ -55,6 +61,14 @@ $(function(){
         createWindow('terminal','Terminal','<p class="font-mono">$ echo Hola</p>');break;
       case 'map':
         createWindow('map','Mapa','<iframe class="w-full h-64" src="https://www.openstreetmap.org/export/embed.html"></iframe>');break;
+      case 'safari':
+        createWindow('safari','Navegador','<p>Navegador simple.</p>');break;
+      case 'settings':
+        createWindow('settings','Ajustes','<p>Ajustes del sistema.</p>');break;
+      case 'store':
+        createWindow('store','Tienda','<p>Aplicaciones disponibles.</p>');break;
+      case 'trash':
+        createWindow('trash','Basurero','<p>Vacío</p>');break;
     }
   }
 
