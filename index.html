@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MacOS Simulado</title>
+<title>Chantelini Soluciones SA</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
@@ -14,21 +14,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <style>
 body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); background-size: cover; }
-.window { width: 600px; }
+#desktop { padding-top:32px; }
+.window { width:100%; }
 .window-header { cursor: move; }
-.icon { width: 96px; text-align:center; color:white; }
+.icon { width: 96px; text-align:center; color:white; position:relative; z-index:200; }
 .dock { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); border-radius: 0.5rem; }
 .dock-icon { width: 48px; text-align:center; color:white; }
 .selected { outline: 2px solid yellow; border-radius: 0.25rem; }
 .circle{width:12px;height:12px;border-radius:9999px;display:inline-block;margin-right:0.25rem;}
 .close{background:#ff5f56;} .min{background:#ffbd2e;} .max{background:#27c93f;}
-#navbar{position:fixed;top:0;left:0;width:100%;height:32px;background:#2d3748;color:white;z-index:100;display:flex;align-items:center;padding-left:0.5rem;}
-#icons{margin-top:40px;}
+#navbar{position:fixed;top:0;left:0;width:100%;height:32px;background:rgba(45,55,72,0.4);color:white;z-index:100;display:flex;align-items:center;padding-left:0.5rem;padding-right:0.5rem;}
+#icons{margin-top:0;}
 .separator { height: 48px; width: 1px; background:#666; margin:0 0.5rem; }
 </style>
 </head>
 <body class="h-screen w-screen overflow-hidden relative" id="desktop">
-<div id="navbar">MacOS Simulado</div>
+<div id="navbar">Chantelini soluciones SA <img src="https://img.icons8.com/ios-filled/24/mac-os.png" class="ml-auto"/></div>
 <!-- Icons -->
 <div id="icons" class="p-4 space-y-4">
   <div class="icon" data-app="db"><img src="https://img.icons8.com/fluency/96/000000/database.png"/><p>Base Datos</p></div>
@@ -47,7 +48,7 @@ body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); bac
 <div id="dock" class="dock">
   <div class="dock-icon" data-app="safari"><img src="https://img.icons8.com/fluency/48/000000/internet.png"/><p>Safari</p></div>
   <div class="dock-icon" data-app="settings"><img src="https://img.icons8.com/fluency/48/000000/settings.png"/><p>Ajustes</p></div>
-  <div class="dock-icon" data-app="store"><img src="https://img.icons8.com/fluency/48/000000/mac-app-store.png"/><p>Tienda</p></div>
+  <div class="dock-icon" data-app="store"><img src="https://img.icons8.com/fluency/48/shopify.png"/><p>Tienda</p></div>
   <div class="separator"></div>
   <div class="dock-icon" data-app="trash"><img src="https://img.icons8.com/fluency/48/000000/trash.png"/><p>Basurero</p></div>
 </div>

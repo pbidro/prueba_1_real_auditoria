@@ -1,6 +1,6 @@
 $(function(){
   // make icons draggable
-  $(".icon").draggable();
+  $(".icon").draggable({containment:'#desktop'});
 
   let z=1;
     function createWindow(id,title,content){
@@ -14,6 +14,7 @@ $(function(){
       header.find('.min').on('click',()=>win.hide());
       header.find('.max').on('click',()=>win.toggleClass('fixed').toggleClass('absolute'));
       $('#windows').append(win);
+      win.draggable({handle:'.window-header'}).resizable({handles:'all',containment:'#desktop'});
     }
 
   function setSelected(el){
