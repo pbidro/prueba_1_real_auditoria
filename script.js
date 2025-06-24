@@ -3,17 +3,18 @@ $(function(){
   $(".icon").draggable();
 
   let z=1;
-  function createWindow(id,title,content){
-    if($("#"+id).length){ $("#"+id).show(); return; }
-    const win=$("<div class='window bg-white rounded shadow-lg absolute'><div class='window-header bg-gray-200 px-2 py-1 flex justify-between'><span>"+title+"</span><button class='close px-2'>x</button></div><div class='p-2 overflow-auto' style='max-height:400px'></div></div>");
-    win.attr('id',id);
-    win.css({top:'100px',left:'100px','z-index':z++});
-    win.find('.close').on('click',()=>win.hide());
-    win.draggable({handle:'.window-header',start:()=>win.css('z-index',z++)});
-    win.resizable();
-    win.find('div.p-2').append(content);
-    $('#windows').append(win);
-  }
+    function createWindow(id,title,content){
+      if($("#"+id).length){ $("#"+id).show().css('z-index',z++); return; }
+      const win=$("<div class='window fixed inset-x-0 top-8 bottom-12 bg-white rounded shadow-lg flex flex-col'></div>");
+      win.attr('id',id).css('z-index',z++);
+      const header=$("<div class='window-header bg-gray-200 flex items-center px-2 py-1'><div class='flex space-x-1'><span class='circle close'></span><span class='circle min'></span><span class='circle max'></span></div><div class='flex-1 text-center drag-handle font-semibold'>"+title+"</div></div>");
+      const body=$("<div class='flex-1 overflow-auto p-2'></div>").append(content);
+      win.append(header).append(body);
+      header.find('.close').on('click',()=>win.hide());
+      header.find('.min').on('click',()=>win.hide());
+      header.find('.max').on('click',()=>win.toggleClass('fixed').toggleClass('absolute'));
+      $('#windows').append(win);
+    }
 
   function setSelected(el){
     $('.selected').removeClass('selected');
@@ -25,6 +26,26 @@ $(function(){
     const app=$(this).data('app');
     setSelected($(this));
     openApp(app);
+  });
+
+  // open via context menu (right click)
+  $(document).on('contextmenu','.icon, .dock-icon',function(e){
+    e.preventDefault();
+    $('#contextMenu').remove();
+    const app=$(this).data('app');
+    const menu=$('<ul id="contextMenu" class="absolute bg-white border rounded shadow text-sm"></ul>');
+    menu.append('<li class="px-2 py-1 hover:bg-gray-200 cursor-pointer">Abrir</li>');
+    menu.css({top:e.pageY,left:e.pageX,'z-index':z++});
+    $('body').append(menu);
+    menu.on('click','li',function(){
+      setSelected($(e.currentTarget));
+      openApp(app);
+      menu.remove();
+    });
+  });
+
+  $(document).on('click',function(){
+    $('#contextMenu').remove();
   });
 
   function openApp(app){

@@ -20,10 +20,15 @@ body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); bac
 .dock { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); border-radius: 0.5rem; }
 .dock-icon { width: 48px; text-align:center; color:white; }
 .selected { outline: 2px solid yellow; border-radius: 0.25rem; }
+.circle{width:12px;height:12px;border-radius:9999px;display:inline-block;margin-right:0.25rem;}
+.close{background:#ff5f56;} .min{background:#ffbd2e;} .max{background:#27c93f;}
+#navbar{position:fixed;top:0;left:0;width:100%;height:32px;background:#2d3748;color:white;z-index:100;display:flex;align-items:center;padding-left:0.5rem;}
+#icons{margin-top:40px;}
 .separator { height: 48px; width: 1px; background:#666; margin:0 0.5rem; }
 </style>
 </head>
 <body class="h-screen w-screen overflow-hidden relative" id="desktop">
+<div id="navbar">MacOS Simulado</div>
 <!-- Icons -->
 <div id="icons" class="p-4 space-y-4">
   <div class="icon" data-app="db"><img src="https://img.icons8.com/fluency/96/000000/database.png"/><p>Base Datos</p></div>
