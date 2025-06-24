@@ -17,6 +17,10 @@ body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); bac
 .window { width: 600px; }
 .window-header { cursor: move; }
 .icon { width: 96px; text-align:center; color:white; }
+.dock { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); border-radius: 0.5rem; }
+.dock-icon { width: 48px; text-align:center; color:white; }
+.selected { outline: 2px solid yellow; border-radius: 0.25rem; }
+.separator { height: 48px; width: 1px; background:#666; margin:0 0.5rem; }
 </style>
 </head>
 <body class="h-screen w-screen overflow-hidden relative" id="desktop">
@@ -35,6 +39,13 @@ body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); bac
 </div>
 <!-- Windows container -->
 <div id="windows"></div>
+<div id="dock" class="dock">
+  <div class="dock-icon" data-app="safari"><img src="https://img.icons8.com/fluency/48/000000/internet.png"/><p>Safari</p></div>
+  <div class="dock-icon" data-app="settings"><img src="https://img.icons8.com/fluency/48/000000/settings.png"/><p>Ajustes</p></div>
+  <div class="dock-icon" data-app="store"><img src="https://img.icons8.com/fluency/48/000000/mac-app-store.png"/><p>Tienda</p></div>
+  <div class="separator"></div>
+  <div class="dock-icon" data-app="trash"><img src="https://img.icons8.com/fluency/48/000000/trash.png"/><p>Basurero</p></div>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
