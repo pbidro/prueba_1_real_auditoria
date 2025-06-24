@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacOS Simulado</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
+<script src="https://unpkg.com/cytoscape@3.21.1/dist/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<style>
+body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); background-size: cover; }
+.window { width: 600px; }
+.window-header { cursor: move; }
+.icon { width: 96px; text-align:center; color:white; }
+</style>
+</head>
+<body class="h-screen w-screen overflow-hidden relative" id="desktop">
+<!-- Icons -->
+<div id="icons" class="p-4 space-y-4">
+  <div class="icon" data-app="db"><img src="https://img.icons8.com/fluency/96/000000/database.png"/><p>Base Datos</p></div>
+  <div class="icon" data-app="mail"><img src="https://img.icons8.com/fluency/96/000000/apple-mail.png"/><p>Correo</p></div>
+  <div class="icon" data-app="graph"><img src="https://img.icons8.com/fluency/96/000000/graph.png"/><p>Grafo</p></div>
+  <div class="icon" data-app="pdf"><img src="https://img.icons8.com/fluency/96/000000/pdf.png"/><p>PDF</p></div>
+  <div class="icon" data-app="notes"><img src="https://img.icons8.com/fluency/96/000000/note.png"/><p>Notas</p></div>
+  <div class="icon" data-app="calc"><img src="https://img.icons8.com/fluency/96/000000/calculator.png"/><p>Calculadora</p></div>
+  <div class="icon" data-app="files"><img src="https://img.icons8.com/fluency/96/000000/folder-invoices.png"/><p>Archivos</p></div>
+  <div class="icon" data-app="media"><img src="https://img.icons8.com/fluency/96/000000/video.png"/><p>Media</p></div>
+  <div class="icon" data-app="terminal"><img src="https://img.icons8.com/fluency/96/000000/console.png"/><p>Terminal</p></div>
+  <div class="icon" data-app="map"><img src="https://img.icons8.com/fluency/96/000000/map.png"/><p>Mapa</p></div>
+</div>
+<!-- Windows container -->
+<div id="windows"></div>
+<script src="script.js"></script>
+</body>
+</html>
