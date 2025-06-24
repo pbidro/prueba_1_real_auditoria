@@ -4,7 +4,7 @@ $(function(){
     $(".icon").draggable({containment:'#desktop'});
   }
 
-  let z=1;
+  let z=1000;
     function createWindow(id,title,content){
       if($("#"+id).length){ $("#"+id).show().css('z-index',z++); return; }
       const win=$("<div class='window fixed inset-x-0 top-8 bottom-12 bg-white rounded shadow-lg flex flex-col'></div>");
@@ -14,10 +14,25 @@ $(function(){
       win.append(header).append(body);
       header.find('.close').on('click',()=>win.hide());
       header.find('.min').on('click',()=>win.hide());
-      header.find('.max').on('click',()=>win.toggleClass('fixed').toggleClass('absolute'));
+      header.find('.max').on('click',function(){
+        const desktop=$('#desktop');
+        const navH=$('#navbar').outerHeight()||0;
+        const dockH=$('#dock').outerHeight()||0;
+        if(win.data('max')){
+          const prev=win.data('prev');
+          win.css(prev).data('max',false);
+          if($.fn.draggable) win.draggable('enable');
+          if($.fn.resizable) win.resizable('enable');
+        }else{
+          win.data('prev',{top:win.css('top'),left:win.css('left'),width:win.width(),height:win.height()});
+          win.css({top:navH,left:0,width:desktop.width(),height:desktop.height()-navH-dockH}).data('max',true);
+          if($.fn.draggable) win.draggable('disable');
+          if($.fn.resizable) win.resizable('disable');
+        }
+      });
       $('#windows').append(win);
       if($.fn.draggable){
-        win.draggable({handle:'.window-header'});
+        win.draggable({handle:'.window-header',cancel:'.circle'});
       }
       if($.fn.resizable){
         win.resizable({handles:'all',containment:'#desktop'});
