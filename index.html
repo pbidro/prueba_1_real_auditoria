@@ -16,11 +16,11 @@
 <style>
 body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); background-size: cover; }
 #desktop { padding-top:32px; }
-.window { width:100%; }
+.window { }
 .drag-handle { cursor: move; }
 .window-header .circle { cursor:pointer; }
 .icon { width: 96px; text-align:center; color:white; position:relative; z-index:200; }
-.dock { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); border-radius: 0.5rem; }
+  .dock { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); border-radius: 0.5rem; width: 80%; justify-content: space-around; gap: 1rem; }
 .dock-icon { width: 48px; text-align:center; color:white; }
 .selected { outline: 2px solid yellow; border-radius: 0.25rem; }
 .circle{width:12px;height:12px;border-radius:9999px;display:inline-block;margin-right:0.25rem;}
@@ -45,6 +45,7 @@ body { background-image: url('https://wallpaperaccess.com/full/317501.jpg'); bac
   <div class="icon" data-app="terminal"><img src="https://img.icons8.com/fluency/96/000000/console.png"/><p>Terminal</p></div>
   <div class="icon" data-app="map"><img src="https://img.icons8.com/fluency/96/000000/map.png"/><p>Mapa</p></div>
   <div class="icon" data-app="sales"><img src="https://img.icons8.com/fluency/96/combo-chart.png"/><p>Ventas</p></div>
+  <div class="icon" data-app="procs"><img src="https://img.icons8.com/fluency/96/workflow.png"/><p>Procesos</p></div>
 </div>
 <!-- Windows container -->
 <div id="windows"></div>

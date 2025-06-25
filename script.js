@@ -7,7 +7,7 @@ $(function(){
   let z=1000;
     function createWindow(id,title,content){
       if($("#"+id).length){ $("#"+id).show().css('z-index',z++); return; }
-      const win=$("<div class='window fixed inset-x-0 top-8 bottom-12 bg-white rounded shadow-lg flex flex-col'></div>");
+      const win=$("<div class='window fixed bg-white rounded shadow-lg flex flex-col'></div>");
       win.attr('id',id).css('z-index',z++);
       const header=$("<div class='window-header bg-gray-200 flex items-center px-2 py-1'><div class='flex space-x-1'><span class='circle close'></span><span class='circle min'></span><span class='circle max'></span></div><div class='flex-1 text-center drag-handle font-semibold'>"+title+"</div></div>");
       const body=$("<div class='flex-1 overflow-auto p-0'></div>").append(content);
@@ -31,14 +31,16 @@ $(function(){
         }
       });
       $('#windows').append(win);
+      const navH=$('#navbar').outerHeight()||0;
+      const winW=$(window).width()*0.8;
+      const winH=$(window).height()*0.7;
+      win.css({top:navH+20,left:($(window).width()-winW)/2,width:winW,height:winH});
       if($.fn.draggable){
         win.draggable({handle:'.window-header',cancel:'.circle'});
       }
       if($.fn.resizable){
         win.resizable({handles:'all',containment:'#desktop'});
       }
-      // start maximized for better visibility
-      header.find('.max').trigger('click');
     }
 
   function setSelected(el){
@@ -115,6 +117,8 @@ $(function(){
         createWindow('store','Tienda','<p>Aplicaciones disponibles.</p>');break;
       case 'sales':
         salesApp();break;
+      case 'procs':
+        processApp();break;
       case 'trash':
         createWindow('trash','Basurero','<p>Vacío</p>');break;
     }
@@ -142,7 +146,8 @@ $(function(){
       li.append(ul);
       tree.append(li);
     }
-    createWindow('db','Bases de Datos',tree);
+    const wrapper=$('<div class="p-2 overflow-auto h-full"></div>').append(tree);
+    createWindow('db','Bases de Datos',wrapper);
   }
 
   function sampleData(){
@@ -199,9 +204,9 @@ $(function(){
       {id:9,subject:'Scrum',body:'La empresa no usa Scrum, revisa PDF'},
       {id:10,subject:'Mapa',body:'Ver ubicación oficina en programa mapa'}
     ];
-    const container=$('<div class="flex h-64"></div>');
+    const container=$('<div class="flex h-full"></div>');
     const list=$('<ul class="w-1/3 border-r overflow-auto"></ul>');
-    const view=$('<div class="w-2/3 p-2"></div>');
+    const view=$('<div class="w-2/3 p-2 overflow-auto"></div>');
     mails.forEach(m=>list.append('<li class="p-2 cursor-pointer hover:bg-gray-200" data-id="'+m.id+'">'+m.subject+'</li>'));
     list.on('click','li',function(){
       const id=$(this).data('id');
@@ -242,7 +247,7 @@ $(function(){
   /* PDF */
   function pdfApp(){
     if($('#pdf').length){ $('#pdf').show(); return; }
-    const container=$('<div><canvas id="pdfc"></canvas></div>');
+    const container=$('<div class="p-2 overflow-auto h-full"><canvas id="pdfc"></canvas><p class="mt-2 text-sm">Este documento resume los principales problemas detectados durante la auditoría. Se detallan las falencias en metodología y en procesos de desarrollo.</p></div>');
     createWindow('pdf','Documento',container);
     const url='document.pdf';
     const loadingTask=pdfjsLib.getDocument(url);
@@ -260,7 +265,7 @@ $(function(){
 
   function mapApp(){
     if($('#map').length){ $('#map').show(); return; }
-    const url='https://www.openstreetmap.org/export/embed.html?bbox=-70.615%2C-33.500%2C-70.606%2C-33.494&layer=mapnik&marker=-33.497%2C-70.610';
+    const url='https://www.openstreetmap.org/export/embed.html?bbox=-70.615%2C-33.500%2C-70.606%2C-33.494&layer=mapnik&marker=-33.497%2C-70.610&zoom=17';
     const frame=$('<iframe class="w-full h-full" src="'+url+'"></iframe>');
     createWindow('map','Mapa',frame);
   }
@@ -277,5 +282,34 @@ $(function(){
       },
       options:{responsive:true,maintainAspectRatio:false}
     });
+  }
+
+  function processApp(){
+    if($('#procs').length){ $('#procs').show(); return; }
+    const today=new Date();
+    const dates=[];
+    for(let i=0;i<10;i++){
+      const d=new Date(today); d.setDate(d.getDate()-i);
+      dates.push(d.toISOString().slice(0,10));
+    }
+    const table=$('<table class="w-full text-center border"/>');
+    const thead=$('<thead><tr><th class="border">Sistema</th></tr></thead>');
+    dates.forEach(dt=>thead.find('tr').append('<th class="border bg-blue-200">'+dt+'</th>'));
+    const tbody=$('<tbody></tbody>');
+    const colors={ok:'bg-green-300',fail:'bg-red-300',warn:'bg-yellow-300'};
+    for(let i=1;i<=10;i++){
+      const tr=$('<tr></tr>');
+      tr.append('<td class="border">Sistema '+i+'</td>');
+      dates.forEach(()=>{
+        const r=Math.random();
+        let cls=r<0.33?colors.ok:r<0.66?colors.warn:colors.fail;
+        tr.append('<td class="border '+cls+'">&nbsp;</td>');
+      });
+      tbody.append(tr);
+    }
+    table.append(thead).append(tbody);
+    const legend=$('<p class="p-2 text-sm">Verde: funciona. Amarillo: en observación. Rojo: con fallas. Encabezados celestes indican fechas en revisión.</p>');
+    const container=$('<div class="flex flex-col h-full"></div>').append(table).append(legend);
+    createWindow('procs','Procesos',container);
   }
 });
