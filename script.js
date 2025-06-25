@@ -7,7 +7,7 @@ $(function(){
   let z=1000;
     function createWindow(id,title,content){
       if($("#"+id).length){ $("#"+id).show().css('z-index',z++); return; }
-      const win=$("<div class='window fixed inset-x-0 top-8 bottom-12 bg-white rounded shadow-lg flex flex-col'></div>");
+      const win=$("<div class='window fixed bg-white rounded shadow-lg flex flex-col'></div>");
       win.attr('id',id).css('z-index',z++);
       const header=$("<div class='window-header bg-gray-200 flex items-center px-2 py-1'><div class='flex space-x-1'><span class='circle close'></span><span class='circle min'></span><span class='circle max'></span></div><div class='flex-1 text-center drag-handle font-semibold'>"+title+"</div></div>");
       const body=$("<div class='flex-1 overflow-auto p-0'></div>").append(content);
@@ -31,14 +31,16 @@ $(function(){
         }
       });
       $('#windows').append(win);
+      const navH=$('#navbar').outerHeight()||0;
+      const winW=$(window).width()*0.8;
+      const winH=$(window).height()*0.7;
+      win.css({top:navH+20,left:($(window).width()-winW)/2,width:winW,height:winH});
       if($.fn.draggable){
         win.draggable({handle:'.window-header',cancel:'.circle'});
       }
       if($.fn.resizable){
         win.resizable({handles:'all',containment:'#desktop'});
       }
-      // start maximized for better visibility
-      header.find('.max').trigger('click');
     }
 
   function setSelected(el){
